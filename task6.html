@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="quizApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Quiz App</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color:olivedrab;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+
+  h2 {
+    margin-top: 0;
+  }
+
+  .question {
+    margin-bottom: 20px;
+  }
+
+  .answers {
+    list-style: none;
+    padding: 0;
+  }
+
+  .answers li {
+    margin-bottom: 10px;
+  }
+
+  .answers label {
+    display: block;
+  }
+
+  .score {
+    margin-top: 20px;
+  }
+
+  .score p {
+    margin: 0;
+  }
+  button{
+    background-color:yellow;
+    color:red;
+  }
+</style>
+</head>
+<body ng-controller="QuizController">
+
+<div class="container">
+  <h2>Interactive Quiz</h2>
+
+  <div class="question" ng-show="currentQuestion">
+    <p>{{ currentQuestion.question }}</p>
+    <ul class="answers">
+      <li ng-repeat="answer in currentQuestion.answers">
+        <label>
+          <input type="radio" ng-model="selectedAnswer" ng-value="answer">
+          {{ answer }}
+        </label>
+      </li>
+    </ul>
+    <button ng-click="submitAnswer()">Submit</button>
+  </div>
+
+  <div class="score" ng-show="showScore">
+    <h3>Quiz Completed!</h3>
+    <p>Your score: {{ score }}</p>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script>
+var app = angular.module('quizApp', []);
+
+app.controller('QuizController', function($scope) {
+  $scope.questions = [
+    {
+      question: 'What is the capital of France?',
+      answers: ['London', 'Paris', 'Berlin', 'Madrid'],
+      correctAnswer: 'Paris'
+    },
+    {
+      question: 'Who wrote "To Kill a Mockingbird"?',
+      answers: ['Harper Lee', 'Stephen King', 'J.K. Rowling', 'Ernest Hemingway'],
+      correctAnswer: 'Harper Lee'
+    },
+    {
+      question: 'What is the chemical symbol for water?',
+      answers: ['H2O', 'CO2', 'O2', 'H2SO4'],
+      correctAnswer: 'H2O'
+    }
+  ];
+
+  $scope.currentQuestionIndex = 0;
+  $scope.currentQuestion = $scope.questions[$scope.currentQuestionIndex];
+  $scope.score = 0;
+  $scope.showScore = false;
+
+  $scope.submitAnswer = function() {
+    if ($scope.selectedAnswer === $scope.currentQuestion.correctAnswer) {
+      $scope.score++;
+    }
+
+    $scope.selectedAnswer = null;
+    $scope.currentQuestionIndex++;
+
+    if ($scope.currentQuestionIndex < $scope.questions.length) {
+      $scope.currentQuestion = $scope.questions[$scope.currentQuestionIndex];
+    } else {
+      $scope.showScore = true;
+    }
+  };
+});
+</script>
+
+</body>
+</html>
